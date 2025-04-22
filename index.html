@@ -1,0 +1,177 @@
+ <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MGL - نظام الأرباح والمكافآت</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- يمكنك إضافة أيقونات Font Awesome إذا أردت استخدامها للأزرار -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+</head>
+<body>
+    <!-- شاشة البداية -->
+    <div id="splash-screen">
+        <h1>MGL</h1>
+    </div>
+
+    <!-- الصفحة الرئيسية (بتصميم محسن) -->
+    <div id="main-page" class="page hidden">
+        <header>
+            <h1>MGL</h1>
+            <p>نظام الأرباح والمكافآت</p>
+        </header>
+        <main class="main-page-content">
+            <div class="scanner-section">
+                <div class="scanner-container">
+                    <div class="video-wrapper">
+                        <video id="scanner-video" playsinline></video>
+                        <canvas id="scanner-canvas" class="hidden"></canvas>
+                        <div id="scanner-laser" class="hidden"></div>
+                    </div>
+                    <button id="scan-btn" class="btn scan-action-btn">
+                        <!-- <i class="fas fa-barcode"></i> -->
+                        مسح الباركود
+                    </button>
+                    <div id="scan-result" class="scan-feedback">الماسح جاهز</div>
+                </div>
+            </div>
+
+            <div class="actions main-page-actions">
+                <button id="earnings-btn" class="btn action-tile">
+                    <!-- <i class="fas fa-chart-line"></i> -->
+                    <span>الأرباح اليومية</span>
+                </button>
+                <button id="search-btn" class="btn action-tile">
+                    <!-- <i class="fas fa-search"></i> -->
+                    <span>بحث / تعديل</span>
+                </button>
+                <button id="manual-entry-btn" class="btn action-tile">
+                    <!-- <i class="fas fa-user-plus"></i> -->
+                    <span>إضافة زائر</span>
+                </button>
+            </div>
+        </main>
+        <!-- لا يوجد footer في الصفحة الرئيسية الجديدة -->
+    </div>
+
+    <!-- نموذج إدخال بيانات زائر جديد -->
+    <div id="data-entry-form" class="page hidden form-page">
+        <header><h2>إدخال بيانات زائر جديد</h2></header>
+        <main>
+            <form id="visitor-form">
+                <p id="form-instructions"></p>
+                <div class="form-group">
+                    <label for="barcode">رقم الباركود:</label>
+                    <input type="text" id="barcode" required>
+                    <small id="barcode-help" class="form-text"></small>
+                </div>
+                <div class="form-group">
+                    <label for="name">الاسم الكامل:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">العمر:</label>
+                    <input type="number" id="age" required min="1">
+                </div>
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف:</label>
+                    <input type="tel" id="phone" required pattern="[0-9]{10,}" title="10 أرقام على الأقل">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">حفظ البيانات</button>
+                    <button type="button" id="cancel-form" class="btn cancel">إلغاء</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- شاشة البحث -->
+    <div id="search-page" class="page hidden">
+        <header><h2>بحث / تعديل زائر</h2></header>
+        <main>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="ابحث بالاسم، الهاتف، الباركود...">
+                <button id="search-submit" class="btn small-btn">بحث</button>
+            </div>
+            <div id="search-feedback" class="search-feedback"></div>
+            <div id="search-results" class="hidden">
+                <h3>نتائج البحث:</h3>
+                <div id="results-list"></div>
+                <div id="selected-visitor-details" class="hidden">
+                    <h4>تفاصيل الزائر المحدد:</h4>
+                    <div id="visitor-info">
+                        <!-- معلومات الزائر ستظهر هنا -->
+                    </div>
+                     <!-- **** قسم تعديل الزيارات الجديد **** -->
+                    <div class="edit-visits-controls">
+                        <label>عدد الزيارات:</label>
+                        <div class="visits-adjust">
+                            <button id="decrease-visits-btn" class="btn adjust-btn">-</button>
+                            <span id="visitor-visits-display">0</span>
+                            <button id="increase-visits-btn" class="btn adjust-btn">+</button>
+                        </div>
+                         <small>(يتم تحديثه تلقائياً)</small>
+                    </div>
+                    <!-- ********************************* -->
+                    <div class="form-actions">
+                         <button id="delete-visitor-btn" class="btn cancel">حذف الزائر</button>
+                    </div>
+                </div>
+            </div>
+       </main>
+       <footer>
+            <button id="back-from-search" class="btn cancel">رجوع للرئيسية</button>
+       </footer>
+    </div>
+
+    <!-- صفحة الأرباح اليومية -->
+    <div id="earnings-page" class="page hidden">
+        <header>
+            <h2>الأرباح اليومية (<span id="current-date"></span>)</h2>
+            <div class="total-earnings-display">
+                إجمالي الأرباح: <span id="total-earnings">0</span>
+            </div>
+        </header>
+        <main>
+            <div id="earnings-list">
+                <p>لا توجد إدخالات لهذا اليوم.</p>
+            </div>
+        </main>
+        <footer>
+            <button id="clear-earnings-btn" class="btn cancel">مسح أرباح اليوم</button>
+            <button id="back-from-earnings" class="btn">رجوع للرئيسية</button>
+        </footer>
+    </div>
+
+    <!-- نموذج اختيار عدد اللاعبين (Modal) -->
+    <div id="player-choice-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3 id="player-choice-visitor-name">اختر عدد اللاعبين لـ:</h3>
+            <div class="player-options">
+                <button class="btn player-btn" data-players="1">لاعب واحد (8,000)</button>
+                <button class="btn player-btn" data-players="2">لاعبان (10,000)</button>
+                <button class="btn player-btn" data-players="3">3 لاعبين (15,000)</button>
+                <button class="btn player-btn" data-players="4">4 لاعبين (18,000)</button>
+            </div>
+            <button id="cancel-player-choice" class="btn cancel small-btn">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- **** نموذج رسالة المكافأة الجديدة **** -->
+    <div id="reward-modal" class="modal-overlay hidden">
+        <div class="modal-box reward-box">
+             <span class="reward-icon">🎉</span>
+             <h2>مبروك!</h2>
+             <p>لقد أكمل الزائر <strong><span id="reward-visitor-name"></span></strong> 5 زيارات.</p>
+             <p>هذه الزيارة (السادسة) مجانية!</p>
+             <p><small>(سيتم إعادة تعيين عداد زياراته إلى الصفر)</small></p>
+             <button id="close-reward-modal" class="btn">موافق</button>
+         </div>
+     </div>
+
+    <!-- مكتبة jsQR -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <!-- السكربت الخاص بالتطبيق -->
+    <script src="script.js"></script>
+</body>
+</html>
